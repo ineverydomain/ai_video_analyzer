@@ -9,6 +9,14 @@ from core.extractor import extract_action_items, extract_key_decisions, extract_
 from core.rag_engine import build_rag_chain, ask_question
 
 load_dotenv()
+if "OPENAI_API_KEY" in st.secrets:
+    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+
+if "GROQ_API_KEY" in st.secrets:
+    os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+
+if "SARVAM_API_KEY" in st.secrets:
+    os.environ["SARVAM_API_KEY"] = st.secrets["SARVAM_API_KEY"]
 
 # ─── Page Config ────────────────────────────────────────────────────────────────
 st.set_page_config(

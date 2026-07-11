@@ -1,0 +1,20 @@
+# Python environment files
+.env
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Local database folders (Chroma)
+vector_db/
+
+# Media processing directories
+downloads/
+*.wav
+*.mp3
+*.webm
+*.m4a
+
+# OS files
+.DS_Store

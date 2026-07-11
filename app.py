@@ -388,6 +388,7 @@ with st.sidebar:
     # compute_mode = st.radio("Processing Environment", ["Cloud API (Fast)", "Local CPU (Private)"])
     compute_mode_raw = st.radio("Processing Environment", ["Cloud API (Fast)", "Local CPU (Private)"])
     compute_mode = "api" if "cloud" in compute_mode_raw.lower() else "local"
+    show_local_info = compute_mode == "local"
 
     
 
@@ -410,6 +411,21 @@ with st.sidebar:
 st.markdown('<div class="hero-title">AI Video Analyzer</div>', unsafe_allow_html=True)
 st.markdown('<div class="hero-sub">Transcribe · Summarise · Chat with your meetings</div>', unsafe_allow_html=True)
 st.markdown("---")
+
+if show_local_info:
+    st.markdown(f"""
+    <div class="card" style="border-color:var(--accent)">
+        <div class="card-title">💻 Local CPU Mode</div>
+        <div class="card-content">
+            You can run this app locally on your own machine using the Local CPU (Private) option.
+            No cloud compute engine required — everything runs on your device.
+            <br><br>
+            📦 To download and set up the app locally, visit the GitHub repository:<br>
+            <a href="https://github.com/ineverydomain/ai_video_analyzer" target="_blank" style="color:var(--accent);font-weight:600;text-decoration:none">
+                https://github.com/ineverydomain/ai_video_analyzer
+            </a>
+        </div>
+    </div>""", unsafe_allow_html=True)
 
 # ── Run Pipeline Processing ─────────────────────────────────────────────────────
 if run_btn:

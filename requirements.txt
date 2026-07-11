@@ -47,3 +47,14 @@ tqdm>=4.66.0                      # Progress bars
 requests>=2.32.0
 langchain-ollama>=0.1.0  # Local LLM support via Ollama
 
+streamlit
+langchain
+langchain-openai
+langchain-chroma
+langchain-community
+langchain-text-splitters
+yt-dlp
+pydub
+audioop-lts
+requests
+python-dotenv

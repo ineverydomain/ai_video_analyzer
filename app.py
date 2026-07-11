@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import os
 from dotenv import load_dotenv
 from utils.audio_processor import process_input
 from core.transcriber import transcribe_all
@@ -331,6 +332,7 @@ for key, default in {
     "processing": False,
     "pipeline_done": False,
     "pipeline_steps": {},
+    "uploaded_file_path": None,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = default
@@ -358,6 +360,19 @@ with st.sidebar:
 
     st.markdown('<span class="badge badge-purple">Input Source</span>', unsafe_allow_html=True)
     source = st.text_input("YouTube URL or File Path", placeholder="https://youtube.com/watch?v=... or /path/to/file.mp4")
+
+    uploaded_file = st.file_uploader("Or upload a file", type=["mp4", "mp3", "wav", "m4a", "flac", "ogg", "avi", "mkv", "mov"])
+    if uploaded_file is not None:
+        save_dir = os.path.join(os.getcwd(), "uploads")
+        os.makedirs(save_dir, exist_ok=True)
+        temp_path = os.path.join(save_dir, uploaded_file.name)
+        with open(temp_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        st.session_state.uploaded_file_path = temp_path
+        st.caption(f"Uploaded: `{uploaded_file.name}`")
+    else:
+        if st.session_state.get("uploaded_file_path") and not os.path.exists(st.session_state["uploaded_file_path"]):
+            st.session_state.uploaded_file_path = None
 
     language = st.selectbox("Language Dialect", ["english", "hinglish"], index=0)
     # Inside the sidebar section of app.py
@@ -390,8 +405,9 @@ st.markdown("---")
 
 # ── Run Pipeline Processing ─────────────────────────────────────────────────────
 if run_btn:
-    if not source.strip():
-        st.error("Please enter a YouTube URL or file path.")
+    effective_source = st.session_state.get("uploaded_file_path") or source.strip()
+    if not effective_source:
+        st.error("Please enter a YouTube URL, file path, or upload a file.")
     else:
         st.session_state.pipeline_done = False
         st.session_state.result = None
@@ -408,7 +424,7 @@ if run_btn:
                 st.info("⚙️ Pipeline running — see sidebar for live status…")
 
             update_step("audio", "active")
-            chunks = process_input(source)
+            chunks = process_input(effective_source)
             update_step("audio", "done")
 
             update_step("transcript", "active")
